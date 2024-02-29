@@ -1,18 +1,17 @@
 import './App.css'
-import { useState } from 'react'
-import Category from './Pages/Category/Category'
-import Publisher from './Pages/Publisher/Publisher'
+import {Route, Routes} from "react-router-dom"
+import Publisher from "./Pages/Publisher/Publisher"
+import Category from "./Pages/Category/Category"
+import Navbar from './components/Navbar'
 
 function App() {
-  const [page, setPage] = useState("");
   return (
     <>
-    <nav>
-      <span onClick = {() => setPage("publisher")}>Yayıncı</span>
-      <span onClick = {() => setPage("category")}>Kategori</span>
-    </nav>
-    {page === "publisher" && <Publisher/>}
-    {page === "category" && <Category/>}
+    <Navbar/>
+    <Routes>
+      <Route path = "/publisher" element = {<Publisher/>} />
+      <Route path = "/category" element = {<Category/>} />
+    </Routes>
     </>
   )
 }
