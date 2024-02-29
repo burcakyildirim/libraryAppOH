@@ -4,6 +4,7 @@ import './Category.css'
 
 function Category() {
   const [category, setCategory] = useState([]);
+  const [reload, setReload] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:8080/v1/categories")
@@ -12,14 +13,18 @@ function Category() {
         console.log(data);
         setCategory(data);
       });
-  }, []);
+      setReload(false)
+  }, [reload]);
 
   const handleDelete = (event) => {
     const id = event.target.id;
     console.log(id);
     fetch(`http://localhost:8080/v1/categories/${id}`, {
       method: "DELETE",
-    }).catch((error) => {
+    }).then(() => {
+      setReload(true)
+    })
+    .catch((error) => {
       console.error("Error: ", error)
     })
   }
