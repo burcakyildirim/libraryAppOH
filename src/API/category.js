@@ -14,3 +14,9 @@ export const createCategory = async (categories) => {
     const {data} = await axios.post(`http://localhost:8080/v1/categories`, categories)
     return data;
 }
+
+export const updateCategoryAPI = async (categories) => {
+    const {data} = await axios.put(`http://localhost:8080/v1/categories`, categories)
+    //eğer id ile update yapıyorsam `http://localhost:8080/v1/categories/${categories.id}`
+    return data;
+}

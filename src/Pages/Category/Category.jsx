@@ -1,7 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { getCategories, deleteCategory,createCategory } from "../../API/category";
+import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateIcon from "@mui/icons-material/Update";
+import {
+  getCategories,
+  deleteCategory,
+  createCategory,
+  updateCategoryAPI,
+} from "../../API/category";
 import "./Category.css";
 
 function Category() {
@@ -11,7 +17,10 @@ function Category() {
     name: "",
     description: "",
   });
-
+  const [updateCategory, setUpdateCategory] = useState({
+    name: "",
+    description: "",
+  });
   useEffect(() => {
     //category.jsde fetchleyip burayı temizleyip setledik.
     getCategories().then((data) => {
@@ -38,14 +47,44 @@ function Category() {
 
   const handleCreate = () => {
     createCategory(newCategory).then(() => {
-      setReload(true)
-    })
-  }
+      setReload(true);
+    });
+    setNewCategory({
+      name: "",
+      description: "",
+    });
+  };
+
+  const handleUpdateBtn = (cat) => {
+    setUpdateCategory({
+      name: cat.name,
+      description: cat.description,
+      id: cat.id,
+    });
+  };
+
+  const handleUpdateChange = (event) => {
+    setUpdateCategory({
+      ...updateCategory,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleUpdate = () => {
+    updateCategoryAPI(updateCategory).then(() => {
+      setReload(true);
+    });
+    setUpdateCategory({
+      name: "",
+      description: "",
+    });
+  };
 
   return (
     <>
       <h1>Category</h1>
-      <div className="category-inputs">
+      <div className="category-newcategory">
+        <h2>Yeni Kategori</h2>
         <input
           type="text"
           placeholder="Name"
@@ -62,13 +101,38 @@ function Category() {
         />
         <button onClick={handleCreate}>Create</button>
       </div>
+      <div className="category-updatecategory">
+        <h2>Kategori Güncelle</h2>
+        <input
+          type="text"
+          placeholder="Name"
+          name="name"
+          onChange={handleUpdateChange}
+          value={updateCategory.name}
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          name="description"
+          onChange={handleUpdateChange}
+          value={updateCategory.description}
+        />
+        <button onClick={handleUpdate}>Update</button>
+      </div>
       <div className="list">
+        <h2>Kategori Listesi</h2>
         {category.map((category) => (
-          <div key={category.id}
-          >
-            <h3>{category.name}
-            <span id={category.id} 
-            onClick = {() => handleDelete(category.id)}><DeleteIcon  /></span></h3> {category.description}
+          <div key={category.id}>
+            <h3>
+              {category.name}
+              <span id={category.id} onClick={() => handleDelete(category.id)}>
+                <DeleteIcon />
+              </span>
+              <span onClick={() => handleUpdateBtn(category)}>
+                <UpdateIcon />
+              </span>
+            </h3>{" "}
+            {category.description}
           </div>
         ))}
       </div>
