@@ -26,7 +26,6 @@ function Category() {
     getCategories().then((data) => {
       setCategory(data);
     });
-    console.log(category);
     setReload(false);
   }, [reload]);
 
