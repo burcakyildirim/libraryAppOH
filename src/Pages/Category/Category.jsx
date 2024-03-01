@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { getCategories,deleteCategory } from "../../API/category";
 import './Category.css'
 
 function Category() {
@@ -7,25 +8,19 @@ function Category() {
   const [reload, setReload] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8080/v1/categories")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setCategory(data);
-      });
+    //category.jsde fetchleyip burayı temizleyip setledik.
+    getCategories().then((data) => {
+      setCategory(data)
+    })
+    console.log(category)
       setReload(false)
   }, [reload]);
 
   const handleDelete = (event) => {
+    //deleteCategory js kısmına ekledik ordan çektik
     const id = event.target.id;
-    console.log(id);
-    fetch(`http://localhost:8080/v1/categories/${id}`, {
-      method: "DELETE",
-    }).then(() => {
-      setReload(true)
-    })
-    .catch((error) => {
-      console.error("Error: ", error)
+    deleteCategory(id).then(() => {
+      setReload(true);
     })
   }
 
@@ -34,7 +29,7 @@ function Category() {
       <h1>Category</h1>
       <div className="list">
         {category.map((category) => (
-          <div id = {category.id} onClick = {(e) => handleDelete(e)} key={category.id}>{category.name}</div>
+          <div id = {category.id} onClick = {(e) => handleDelete(e)} key={category.id}><h4>{category.name}</h4> {category.description}</div>
         ))}
       </div>
     </>
